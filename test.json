@@ -1,0 +1,58 @@
+{
+  "identification" : {
+    "name": "Emotional Music", 
+    "id": "SDB00001",
+    "version": "1.1"
+  },
+  "references" : {
+    "derived_ref" : "https://doi.org/10.1016/j.concog.2017.07.009",
+    "super_ref" : null
+  },
+  
+  "media_description" : { 
+    "media_types":"music",
+    "mime_types": "audio/wav"
+  },
+  "access" : {
+    "license": "red", 
+    "location": "https://owncloud.gwdg.de/index.php/apps/files/?dir=/&fileid=78482825"
+  },
+  "metadata": {
+    "creator_data" : {
+      "creator" : [
+        {
+          "id" : "EBL", 
+          "name" : "Elke Beatrice Lange", 
+          "orcid": null, 
+          "metadata" : "Senior researcher,  Department of Music, MPIAE, Frankfurt/Main"
+        },
+        {
+          "id" : "FZ", 
+          "name" : "Fabian Zweck",
+          "orcid": null, 
+          "metadata" : null
+        }],
+      "creation_date" : "2016",
+      "pub_ref" : ["https://doi.org/10.1525/MP.2018.36.2.217"]
+    },
+    "stats" : {
+      "num_subsets" : 0,
+      "num_entities" : 60
+    },
+    "description" : {
+      "source_desc" : {
+        "source" : "external-commercial", 
+        "modification": "some"
+      },
+      "context_desc" : [{
+          "orig_scientific_field" : ["psychology", "musicology"],
+          "orig_psychological_domain" : ["emotion"],
+          "orig_aesthetic_domain" : ["music"],
+          "orig_paradigm" : ["rating"]
+      }],
+      "features" : null,
+      "documentation" : null,
+      "free_text_description" : "Music samples were taken from a collection originally selected for another experiment in which participants had the task of immersing themselves in music. That pool of 56 excerpts spanned a broad range of Western musical styles: blues, country, electronica, folk, hip hop, classical music, jazz, metal, pop, reggae, rock, soul, traditional German folk (Volksmusik), together with world music. For our final sample, we added four more classical music samples that had been used in a study by Bigand et al. (2005). None of the excerpts had lyrics. The total stimuli selection covered a broad emotional space, ranging from high to low arousal as well as from positive to negative valence. The excerpts lasted 43–61 s, depending on where the phrase ended within the music. The digital WAV files had a sample rate of 44.100 Hz, 16 bits, and loudness was adjusted via the r128gain software"
+    }  
+  }
+}
