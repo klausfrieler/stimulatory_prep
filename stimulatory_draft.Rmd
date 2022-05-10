@@ -230,6 +230,7 @@ Note: All enumerations down here need  probably further extension.
                                          "emotion"|
                                          "perception"|
                                          "cognition"|
+                                         "memory"|
                                          "production"|
                                          "physiology"|
                                          "other"
