@@ -1,9 +1,11 @@
 ---
-title: "Stimulatory Specification"
-version: "0.1"
+title: "RFC: Stimulatory Specification"
 author: "Klaus Frieler"
-date: '2022-05-07'
-output: html_document
+date: '2022-05-10'
+output:
+  word_document: default
+  html_document: default
+version: '0.1'
 ---
 
 ```{r setup, include=FALSE}
@@ -12,360 +14,322 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### A repository for experimental stimuli at the MPIAE
 
-The Stimulatory is the idea of a simulus database which serves as an online digital resource for finding stimulus sets for potential re-use. As a side effect it also can serve as an archiving for documentation of stimulus data sets that were created at the institute.
+The Stimulatory is the working title for the idea of a stimulus database which that can serve as an online digital resource for finding stimulus sets for potential re-use. As a side effect it also can serve as an archiving for documentation of stimulus data sets that were created at the institute.
 
-The main organizational level are stimulus sets, e.g. collection of single stimuli. However, these can be hierachical, i.e. stimulus sets can contains other stimulus subsets. Metadata of are tied to top-level stimulus sets, i.e., stimulus sets which are not contained in another stimulus set. A singleton is a terminal set in this hierarchy and is a single data file. Non-digital stimuli are not considered here (e.g., live interaction of experimenter and participants). Metadata can be inherited via references to super sets. 
+The main organizational level are stimulus sets, e.g., collection of single stimuli. However, these can be hierarchical, i.e., stimulus sets can contains other stimulus subsets. Metadata of are tied to top-level stimulus sets, i.e., stimulus sets which are not contained in another stimulus set. A singleton is a terminal set in this hierarchy and is a single data file. Non-digital stimuli are not considered here (e.g., live interaction of experimenter and participants). Metadata can be inherited via references to super sets.
 
-As the implementation details are yet to specified we use here a custom extension of Backus-Naur-form to describe the logical organization of the metadata. This can be easily translated then to code or proper database definitions (e.g., tabel definition in SQL or the like.)  
+As the implementation details are yet to specified, we use here a custom extension of Backus-Naur-form to describe the logical organization of the metadata. This can be easily translated then to code or proper database definitions (e.g., table definition in SQL or the like.)
 
-We first start with some basic definitions, which should be self-explaining. Resources in capital letters refer to external definitions, which need to be imported from somewhere else, e.g., MIME types or ORCID. A custom extension are curly brackets ```{}```, which denote a collection of resources (without ordering), and round brackets ```()```, which denote an ordered list. Furthermore, a plus sign ```+``` after an entity indicates that it can occur one or more times, an asterisk ```*``` indicates that it can occur arbitrarily often including not at all, and a question mark ```?```` indicates that it can occur zero or one time.
-
+We first start with some basic definitions, which should be self-explanatory. Resources in capital letters refer to external definitions, which need to be imported from somewhere else, e.g., MIME types or ORCID. A custom extension are curly brackets `{}`, which denote a collection of resources (without ordering), and round brackets `()`, which denote an ordered list. Furthermore, a plus sign `+` after an entity indicates that it can occur one or more times, an asterisk `*` indicates that it can occur arbitrarily often including not at all, and a question mark `?` indicates that it can occur zero or one time.
 
 Some basic types first.
 
-```
-<alphanum> ::= r"[a-zA-Z0-9]+"
-<text> ::= <UNICODE-STRING>
-<version> ::= <major>"."<minor>
-<major ::= <INTEGER>
-<minor> ::= <INTEGER> 
-```
-Next we define a person (e.g., the creator of stimulus set). This is just the basic stuff, a person has a name, an internal id and an optional ORCID as well as an optional text field for further descriptons, which might not be needed or more detailed out in future version of this specification.
+    <alphanum> ::= r"[a-zA-Z0-9]+"
+    <text> ::= <UNICODE-STRING>
+    <version> ::= <major>"."<minor>
+    <major ::= <INTEGER>
+    <minor> ::= <INTEGER> 
 
-```
-<person> ::= {
-              <person_id>, 
-              <person_name>, 
-              <orcid>, 
-              <person_metadata>
-             }
-              
-<person_id> ::= <alphanum>
-<person_name> ::= (<person_surname>, [<person_middlename>], <person_last_name>)
-<person_surname> ::= <TEXT>
-<person_middlename> ::= NA|<TEXT>
-<person_last_name> ::= <TEXT>
-<orcid> ::= NA|<ORCID>
-<person_metadata> ::= NA|<TEXTLIST>
-```
+Next, we define a person (e.g., the creator of stimulus set). This is just the basic stuff, a person has a name, an internal id and an optional ORCID as well as an optional text field for further descriptons, which might not be needed or more detailed out in future version of this specification.
 
-A stimulus set is described by certain metadat fields that can be ordered according to their content. We propose identification, references, media types, access rights and content descriptions. 
+    <person> ::= {
+                  <person_id>, 
+                  <person_name>, 
+                  <orcid>, 
+                  <person_metadata>
+                 }
+                  
+    <person_id> ::= <alphanum>
+    <person_name> ::= (<person_surname>, [<person_middlename>], <person_last_name>)
+    <person_surname> ::= <TEXT>
+    <person_middlename> ::= NA|<TEXT>
+    <person_last_name> ::= <TEXT>
+    <orcid> ::= NA|<ORCID>
+    <person_metadata> ::= NA|<TEXTLIST>
 
-```
-<stimset> ::= {
-               <stimset_identification>, 
-               <stimset_references>,
-               <stimset_media_description>,
-               <stimset_access>,
-               <stimset_metadata>
-              }
-```
+A stimulus set is described by certain metadat fields that can be ordered according to their content. We propose identification, references, media types, access rights and content descriptions.
 
-Identification has three components, a name (for humans), and id (for internal use), and a version number (as stimulus sets are frequently modified during re-use.) 
+    <stimset> ::= {
+                   <stimset_identification>, 
+                   <stimset_references>,
+                   <stimset_media_description>,
+                   <stimset_access>,
+                   <stimset_metadata>
+                  }
 
-```
-<stimset_identification> ::= {
-                              <stimset_name>, 
-                              <stimset_id>, 
-                              <stimset_version>
-                             }
+Identification has three components, a name (for humans), and id (for internal use), and a version number (as stimulus sets are frequently modified during re-use.)
 
-<stimset_name> ::= <text>
-<stimset_id> ::= <alphanum>|<URI>
-<stimset_version> ::= "1.0"|<version>
-```
+    <stimset_identification> ::= {
+                                  <stimset_name>, 
+                                  <stimset_id>, 
+                                  <stimset_version>
+                                 }
+
+    <stimset_name> ::= <text>
+    <stimset_id> ::= <alphanum>|<URI>
+    <stimset_version> ::= "1.0"|<version>
 
 Note: The id might be realized as an URI.
 
-References are of two types: either an ```<stimset_id>``` referencing a super set, i.e. a stimulus set, where it is part of, or reference to a stimulus, from which this stimulus set was originally derived, e.g., an earlier version. We need to store different versions of the same stimulus, as they can be located in different places, have different access rights or might otherwise significantly deviate from its source. Both references can be missing, i.e. for firs versions of original stimulus sets.
+References are of two types: either an `<stimset_id>` referencing a super set, i.e. a stimulus set, where it is part of, or reference to a stimulus, from which this stimulus set was originally derived, e.g., an earlier version. We need to store different versions of the same stimulus, as they can be located in different places, have different access rights or might otherwise significantly deviate from its source. Both references can be missing, i.e. for firs versions of original stimulus sets.
 
-```
-<stimset_references> ::= {
-                          <stimset_derived_ref>,
-                          <stimset_super_ref>
-                         }
-               
-<stimset_derived_ref> ::= NA|<stimset_id>
-<stimset_super_ref> ::= NA|<stimset_id>
-               
-```
+    <stimset_references> ::= {
+                              <stimset_derived_ref>,
+                              <stimset_super_ref>
+                             }
+                   
+    <stimset_derived_ref> ::= NA|<stimset_id>
+    <stimset_super_ref> ::= NA|<stimset_id>
+                   
 
-Media types are the next level of description. This could be sorted under metadata, but because of its importance for the search process, we decided to give it its logical category, however, this might change in the future or will be ignored by the implementation anyway. We propose to use two different fields, on for media types and for the actual mime types. Meida type is basically some super-set of MIME types, but with some extra information. This will probably be one of the most important fields for search. As a stimulus data set can contain a mixture of media, both fields are collections, i.e., they can contain more than one entry.
+Media types are the next level of description. This could be sorted under metadata, but because of its importance for the search process, we decided to give it its logical category, however, this might change in the future or will be ignored by the implementation anyway. We propose to use two different fields, on for media types and for the actual mime types. Media type is basically some super-set of MIME types, but with some extra information. This will probably be one of the most important fields for search. As a stimulus data set can contain a mixture of media, both fields are collections, i.e., they can contain more than one entry.
 
-```
-<stimset_media_description> ::= { 
-                                 <media_types>+,
-                                 <mime_types>+
-                                }
+    <stimset_media_description> ::= { 
+                                     <media_types>+,
+                                     <mime_types>+
+                                    }
 
-<media_types> ::= {
-                   "text"|
-                   "picture"|
-                   "video-live"|
-                   "video-animated"|
-                   "music"|
-                   "speech"|
-                   "sound"|
-                   "complex audio"|
-                   "VR/AR"|
-                   "other"
-                  }
-                  
-<mime_types> ::= NA|<MIME_TYPE>+
-```
+    <media_types> ::= {
+                       "text"|
+                       "picture"|
+                       "video-live"|
+                       "video-animated"|
+                       "music"|
+                       "speech"|
+                       "sound"|
+                       "complex audio"|
+                       "VR/AR"|
+                       "other"
+                      }
+                      
+    <mime_types> ::= NA|<MIME_TYPE>+
 
 Access rights is another important set, which we cannot define here yet in full details. Hence, we use just somme dummy entries ("greeb", "yellow", "red") for the moment. Further, we include here the actual location of the stimulus data set, i.e. the URL (or similar), where the files are actually located, as we probably do not want to store them in the database but somewhere externally, as these are tera bytes of mostly binary data.
 
-```
-<stimset_access> ::= {
-                      <stimset_license>, 
-                      <stimset_location>
-                     }
-                      
-<stimset_license> ::= "green"|"yellow"|"red"|"red"
-<stimset_location> ::= <URI>
-```
+    <stimset_access> ::= {
+                          <stimset_license>, 
+                          <stimset_location>
+                         }
+                          
+    <stimset_license> ::= "green"|"yellow"|"red"|"red"
+    <stimset_location> ::= <URI>
 
 Finally, we have a set of fields that contain further descriptions of the stimulus set, which are (more or less) specific to this kind of data. These can be ordered in to creator data, statistical descriptions of the data set (e.g., how many files) and further descriptions.
 
-```
-<stimset_metadata> ::= {
-                        <stimset_creator_data>,
-                        <stimset_stats>,
-                        <stimset_description>
-                       }
-```
+    <stimset_metadata> ::= {
+                            <stimset_creator_data>,
+                            <stimset_stats>,
+                            <stimset_description>
+                           }
 
 Creator data contains the name of the creator and the owner, a creation date (probably only a year), as well as references to publications where the stimulus set was used (either in form of a DOI or a classical textual literature reference in APA style.) The owner is the person who is currently in charge of the data set, e.g., for maintenance. Both creator and owner can be collections, i.e., have more than one entry.
 
+    <stimset_creator_data> ::= {
+                                <stimset_creator>+,
+                                <stimset_creation_date>,
+                                <stimset_owner>+
+                                <stimset_pub_ref>+
+                               }
 
-```
-<stimset_creator_data> ::= {
-                            <stimset_creator>+,
-                            <stimset_creation_date>,
-                            <stimset_owner>+
-                            <stimset_pub_ref>+
-                           }
+    <stimset_creator> ::= <person>
+    <stimset_creation_date> ::= <DATE>
+    <stimset_owner> ::= <person>
+    <stimset_pub_ref> ::= <DOI>|<APA-REF>
+    <stimset_owner> ::= <person>
 
-<stimset_creator> ::= <person>
-<stimset_creation_date> ::= <DATE>
-<stimset_owner> ::= <person>
-<stimset_pub_ref> ::= <DOI>|<APA-REF>
-<stimset_owner> ::= <person>
-```
+The statistical descriptor contain only two field, the number of subsets (can be empty), and the total number of entities, i.e., all terminal nodes or actual files in all subsets.
 
-The statistical descriptor contain only two field, the number of subsets (can be empty), and the total number of  entities, i.e., all terminal nodes or actual files in all subsets.
+    <stimset_stats> ::=  {<num_subsets>, <num_entities>}
 
-```
-<stimset_stats> ::=  {<num_subsets>, <num_entities>}
-
-<num_subsets> ::= NA|<INTEGER>
-<num_entities> ::= <INTEGER>
-```
+    <num_subsets> ::= NA|<INTEGER>
+    <num_entities> ::= <INTEGER>
 
 The final logical set of metadata fields pertains to the content-based description of the stimulus data. Here, a balance between explicit levels of detail and useful coarse-grained information for retrieval has to be found. The following is pretty much a rough draft and needs further discussion and refinement.e.g., the enumeration of experimental paradigms.
 
 We propose to subdivide the stimulus set description into (1) information pertaining to source of the stimulus set, (2) features of the stimulus set, (3) a reference to an external documentation, if available, and (4) an optional free text description.
 
-```
-<stimset_description> ::= {
-                           <stimset_source_desc>,
-                           <stimset_context_desc>+,
-                           <stimset_features>,
-                           <stimset_documentation>,
-                           <stimset_free_text_description>
-                          }
-```
+    <stimset_description> ::= {
+                               <stimset_source_desc>,
+                               <stimset_context_desc>+,
+                               <stimset_features>,
+                               <stimset_documentation>,
+                               <stimset_free_text_description>
+                              }
 
-The source description contains two enumeration types. The first is the source origin, the second  whether the creation of stimulus set involved modification of an original source (e.g., cutting movie clips),  
+The source description contains two enumeration types. The first is the source origin, the second whether the creation of stimulus set involved modification of an original source (e.g., cutting movie clips),
 
+    <stimset_source_desc> ::= {
+                               <stimset_source>, 
+                               <stimset_modification>
+                              }
+                               
+    <stimset_source> ::= "external-commercial"|
+                         "external-free"|
+                         "external-experiments"|
+                         "internal-researcher"|
+                         "internal-experiments"|
+                         "mixed"|
+                         "other"
+    <stimset_modification> ::= "none"|
+                               "some"|
+                               "substantial"|
+                               "mixed"
 
-```
-<stimset_source_desc> ::= {
-                           <stimset_source>, 
-                           <stimset_modification>
-                          }
-                           
-<stimset_source> ::= "external-commercial"|
-                     "external-free"|
-                     "external-experiments"|
-                     "internal-researcher"|
-                     "internal-experiments"|
-                     "mixed"|
-                     "other"
-<stimset_modification> ::= "none"|
-                           "some"|
-                           "substantial"|
-                           "mixed"
-```
+The context description contains information on the original scientific context the stimulus set was used. As a stimulus set might already have been used in more than one study with possibly different paradigms, this field is a collection, e.g., can have more than one entry.
 
-The context description contains information on the original scientific context the stimulus set was used. As a stimulus set might already have been  used in more than one study with possibly different paradigms, this field is a collection, e.g., can have more than one entry.  
+Since many of our stimulus sets are related to aesthetics, we also include an original aesthetic domain (e.g., music, literature), as well as original scientific field and psychological domain, as stimuli were very likely used in some form of psychological experiment (who else needs stimuli?). Finally, the original experimental paradigm is probably very important as stimulus sets can be strongly tied to one paradigm, which might prevent general re-usability. Note: All enumerations down here need probably further extension.
 
-Since many of our stimulus sets are related to aesthetics, we also include an original aesthetic domain (e.g., music, literature), as well as original scientific field and psychological domain, as stimuli were very likely used in some form of psychological experiment (who else needs stimuli?). Finally, the original experimental paradigm is probably very important as stimulus sets can be strongly tied to one paradigm, which might prevent general re-usability.
-Note: All enumerations down here need  probably further extension. 
-
-```
-<stimset_context_desc> ::= {
-                            <stimset_orig_scientific_field>,
-                            <stimset_orig_psychological_domain>,
-                            <stimset_orig_aesthetic_domain>,
-                            <stimset_orig_paradigm>
-                           }
-                           
-<stimset_orig_scientific_field> ::= {
-                                     "psychology"|
-                                     "neuroscience"|
-                                     "musicology"|
-                                     "literary science"|
-                                     "linguistics"|
-                                     "media science"|
-                                     "sociology"|
-                                     "genetics"|
-                                     "other"
-                                    }+
-                         
-<stimset_orig_psychological_domain> ::= {
-                                         "non-psychological"|
-                                         "aesthetics"|
-                                         "emotion"|
-                                         "perception"|
-                                         "cognition"|
-                                         "memory"|
-                                         "production"|
-                                         "physiology"|
+    <stimset_context_desc> ::= {
+                                <stimset_orig_scientific_field>,
+                                <stimset_orig_psychological_domain>,
+                                <stimset_orig_aesthetic_domain>,
+                                <stimset_orig_paradigm>
+                               }
+                               
+    <stimset_orig_scientific_field> ::= {
+                                         "psychology"|
+                                         "neuroscience"|
+                                         "musicology"|
+                                         "literary science"|
+                                         "linguistics"|
+                                         "media science"|
+                                         "sociology"|
+                                         "genetics"|
                                          "other"
                                         }+
-                         
-<stimset_orig_aesthetic_domain> ::= {
-                                     "non-aesthetics"|
-                                     "music"|
-                                     "literature"|
-                                     "non-literary text"|
-                                     "visual arts"|
-                                     "movies"|
-                                     "music videos"|
-                                     "dance"|
-                                     "theatre"|
-                                     "performance"|
-                                     "other"
-                                    }+
-                              
-<stimset_orig_paradigm> ::=  {
-                              "oddball"|
-                              "comparison"|
-                              "reaction_time"|
-                              "judgement"|
-                              "fMRI"|
-                              "EEG"|
-                              "eye-tracking"|
-                              "MEG"|
-                              "tDCM"|
-                              "physiology"|
-                              "other"
-                             }+
-```
+                             
+    <stimset_orig_psychological_domain> ::= {
+                                             "non-psychological"|
+                                             "aesthetics"|
+                                             "emotion"|
+                                             "perception"|
+                                             "cognition"|
+                                             "memory"|
+                                             "production"|
+                                             "physiology"|
+                                             "other"
+                                            }+
+                             
+    <stimset_orig_aesthetic_domain> ::= {
+                                         "non-aesthetics"|
+                                         "music"|
+                                         "literature"|
+                                         "non-literary text"|
+                                         "visual arts"|
+                                         "movies"|
+                                         "music videos"|
+                                         "dance"|
+                                         "theatre"|
+                                         "performance"|
+                                         "other"
+                                        }+
+                                  
+    <stimset_orig_paradigm> ::=  {
+                                  "oddball"|
+                                  "comparison"|
+                                  "reaction_time"|
+                                  "judgement"|
+                                  "fMRI"|
+                                  "EEG"|
+                                  "eye-tracking"|
+                                  "MEG"|
+                                  "tDCM"|
+                                  "physiology"|
+                                  "other"
+                                 }+
 
-Lastly, the stimuli might come along with descriptive features attached, which might be by design (i.e., according to the original search and paradigm) or accidental (e.g., not by design). A feature is a key-value pair, where value can be either a numerical (floating point)  or a textual value. Any stimulus set can have a arbitrary list of feature values. If features are not scalar, but vectors (e.g. timeline annotations), then this a feature value with an additional "coordinate", indicating the mapping of features values to stimulus, e.g., a time point or x-y coordinate in a picture or a video. 
+Lastly, the stimuli might come along with descriptive features attached, which might be by design (i.e., according to the original search and paradigm) or accidental (e.g., not by design). A feature is a key-value pair, where value can be either a numerical (floating point) or a textual value. Any stimulus set can have a arbitrary list of feature values. If features are not scalar, but vectors (e.g., timeline annotations), then this a feature value with an additional "coordinate", indicating the mapping of features values to stimulus, e.g., a time point or x-y coordinate in a picture or a video.
 
-```
-<stimset_features> ::= {
-                        <stimset_design_features>+
-                        <stimset_accidental_features>+
-                       }
+    <stimset_features> ::= {
+                            <stimset_design_features>+
+                            <stimset_accidental_features>+
+                           }
 
 
-<stimset_design_features> ::= <feature>
-<stimset_accidental_features> ::= <feature>
-  
-<feature> ::= <feature_name> "=" <feature_value>
-  
-<feature_name> :: = <alphanum>
-<feature_value> ::= <scalar_feature>|<vector_feature>
-  
-<scalar_feature> ::= [<coordinate> ":"] <scalar_value>
-<coordinate> ::= (<scalar_value>+)
-<scalar_value> ::= <FLOAT> | <INTEGER> | <alphanum> | NA
-<vector_feature> ::= (<scalar_feature>+)
-
-```
+    <stimset_design_features> ::= <feature>
+    <stimset_accidental_features> ::= <feature>
+      
+    <feature> ::= <feature_name> "=" <feature_value>
+      
+    <feature_name> :: = <alphanum>
+    <feature_value> ::= <scalar_feature>|<vector_feature>
+      
+    <scalar_feature> ::= [<coordinate> ":"] <scalar_value>
+    <coordinate> ::= (<scalar_value>+)
+    <scalar_value> ::= <FLOAT> | <INTEGER> | <alphanum> | NA
+    <vector_feature> ::= (<scalar_feature>+)
 
 Finally, existing documentation should be stored along with the stimulus set, of course, and could thus simply be described (and possibly accessed) with an URI. The free text description is a simple text field.
 
-```
-<stimset_documentation> ::= <URI>
-<stimset_free_text_description> ::= <TEXT>
-```
+    <stimset_documentation> ::= <URI>
+    <stimset_free_text_description> ::= <TEXT>
 
 ### Example: Music emotion retrieval (Lange & Frieler, 2018)
+
 In this study, Lange & Frieler used 60 excerpts from commercially available music than spanned a wide range of emotions in affectice V-A space. These excerpts were rated by a set of 20+ audio engineers on various adjectives, emotion-related and other. Additionally, a large set of numerical features were extracted with the help of the MIRToolbox (Lartillot et al, 2021) to model the participant ratings with audio features. We present now an encoding in JSON, which is pretty straight-forward. Note that this set has no features attached, but the single files, which are not shown here, would have.
 
-
-```
-{
-  "identification" : {
-    "name": "Emotional Music", 
-    "id": "SDB00001",
-    "version": "1.1"
-  },
-  "references" : {
-    "derived_ref" : "https://doi.org/10.1016/j.concog.2017.07.009",
-    "super_ref" : null
-  },
-  
-  "media_description" : { 
-    "media_types":"music",
-    "mime_types": "audio/wav"
-  },
-  "access" : {
-    "license": "red", 
-    "location": "https://owncloud.gwdg.de/index.php/apps/files/?dir=/&fileid=78482825"
-  },
-  "metadata": {
-    "creator_data" : {
-      "creator" : [
-        {
-          "id" : "EBL", 
-          "name" : "Elke Beatrice Lange", 
-          "orcid": null, 
-          "metadata" : "Senior researcher,  Department of Music, MPIAE, Frankfurt/Main"
-        },
-        {
-          "id" : "FZ", 
-          "name" : "Fabian Zweck",
-          "orcid": null, 
-          "metadata" : null
-        }],
-      "creation_date" : "2016",
-      "owner" : [
-        {
-          "id" : "EBL", 
-          "name" : "Elke Beatrice Lange", 
-          "orcid": null, 
-          "metadata" : "Senior researcher,  Department of Music, MPIAE, Frankfurt/Main"
-        }],
-      "pub_ref" : ["https://doi.org/10.1525/MP.2018.36.2.217"]
-    },
-    "stats" : {
-      "num_subsets" : 0,
-      "num_entities" : 60
-    },
-    "description" : {
-      "source_desc" : {
-        "source" : "external-commercial", 
-        "modification": "some"
+    {
+      "identification" : {
+        "name": "Emotional Music", 
+        "id": "SDB00001",
+        "version": "1.1"
       },
-      "context_desc" : [{
-          "orig_scientific_field" : ["psychology", "musicology"],
-          "orig_psychological_domain" : ["emotion"],
-          "orig_aesthetic_domain" : ["music"],
-          "orig_paradigm" : ["rating"]
-      }],
-      "features" : null,
-      "documentation" : null,
-      "free_text_description" : "Music samples were taken from a collection originally selected for another experiment in which participants had the task of immersing themselves in music. That pool of 56 excerpts spanned a broad range of Western musical styles: blues, country, electronica, folk, hip hop, classical music, jazz, metal, pop, reggae, rock, soul, traditional German folk (Volksmusik), together with world music. For our final sample, we added four more classical music samples that had been used in a study by Bigand et al. (2005). None of the excerpts had lyrics. The total stimuli selection covered a broad emotional space, ranging from high to low arousal as well as from positive to negative valence. The excerpts lasted 43–61 s, depending on where the phrase ended within the music. The digital WAV files had a sample rate of 44.100 Hz, 16 bits, and loudness was adjusted via the r128gain software"
-    }  
-  }
-}
-
-
-```
+      "references" : {
+        "derived_ref" : "https://doi.org/10.1016/j.concog.2017.07.009",
+        "super_ref" : null
+      },
+      
+      "media_description" : { 
+        "media_types":"music",
+        "mime_types": "audio/wav"
+      },
+      "access" : {
+        "license": "red", 
+        "location": "https://owncloud.gwdg.de/index.php/apps/files/?dir=/&fileid=78482825"
+      },
+      "metadata": {
+        "creator_data" : {
+          "creator" : [
+            {
+              "id" : "EBL", 
+              "name" : "Elke Beatrice Lange", 
+              "orcid": null, 
+              "metadata" : "Senior researcher,  Department of Music, MPIAE, Frankfurt/Main"
+            },
+            {
+              "id" : "FZ", 
+              "name" : "Fabian Zweck",
+              "orcid": null, 
+              "metadata" : null
+            }],
+          "creation_date" : "2016",
+          "owner" : [
+            {
+              "id" : "EBL", 
+              "name" : "Elke Beatrice Lange", 
+              "orcid": null, 
+              "metadata" : "Senior researcher,  Department of Music, MPIAE, Frankfurt/Main"
+            }],
+          "pub_ref" : ["https://doi.org/10.1525/MP.2018.36.2.217"]
+        },
+        "stats" : {
+          "num_subsets" : 0,
+          "num_entities" : 60
+        },
+        "description" : {
+          "source_desc" : {
+            "source" : "external-commercial", 
+            "modification": "some"
+          },
+          "context_desc" : [{
+              "orig_scientific_field" : ["psychology", "musicology"],
+              "orig_psychological_domain" : ["emotion"],
+              "orig_aesthetic_domain" : ["music"],
+              "orig_paradigm" : ["rating"]
+          }],
+          "features" : null,
+          "documentation" : null,
+          "free_text_description" : "Music samples were taken from a collection originally selected for another experiment in which participants had the task of immersing themselves in music. That pool of 56 excerpts spanned a broad range of Western musical styles: blues, country, electronica, folk, hip hop, classical music, jazz, metal, pop, reggae, rock, soul, traditional German folk (Volksmusik), together with world music. For our final sample, we added four more classical music samples that had been used in a study by Bigand et al. (2005). None of the excerpts had lyrics. The total stimuli selection covered a broad emotional space, ranging from high to low arousal as well as from positive to negative valence. The excerpts lasted 43–61 s, depending on where the phrase ended within the music. The digital WAV files had a sample rate of 44.100 Hz, 16 bits, and loudness was adjusted via the r128gain software"
+        }  
+      }
+    }

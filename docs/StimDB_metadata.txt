@@ -1,0 +1,78 @@
+Stimulus Database
+-----------------
+For the planned stimulus database, we need a metadata schema and a structure to represent the sets of stimuli. 
+It is not sufficient to store the files individually in the database, as experimental stimuli generally come as sets.
+A reasonable structure would be a tree like folder organisation of the stimui files, where stimuli belonging together (e.g., experimental condition) 
+could be store in corresponding subfolders.
+Examples of stimulus sets are depicted below. For example, stimulus set A would be the most basic organisation, where all stimuli of a set are stored in the 
+root folder (eg musical pieces to be rated).
+For stimulus set B the stimulus files for the different conditions of the experiment are stored in the corresponding subfolders (e.g., poems with +rhyme,-rhyme)
+The root folder of a stimulus set must contain a metadata file to describe the stimuli in the (sub)folder(s). 
+This metadata file is downloaded with the stimuli and should be machine readable (e.g., json or yaml format). 
+...
+
+
+* Stimulus Set A /
+   ├─ metadata.json
+   ├─ image1.jpg
+   └─ image2.jpg	  
+
+* Stimulus Set B /
+   ├─ metadata.json
+   └─ condition_1 
+      ├─ file_metadata(optional).json
+      ├─ image1.jpg
+      ├─ image2.jpg	  
+      └─ sound.wav	
+   └─ condition_2 
+      └─ ...  
+
+* Stimulus Set C /
+   ├─ metadata.json
+   └─ condition_1 /
+        └─images /
+          ├─ file_metadata(optional).json
+          ├─ image1.jpg
+          ├─ image2.jpg	  
+        └─sounds /
+          ├─ file_metadata(optional).json
+          └─ sound.wav	  	  
+
+ 	  	  
+metadata in textfile (downloaded with stimulus set, generated on the fly???):
+	* name/foldername of stimulusset
+	* Responsible Person(s)
+	* Copyright
+	* Description 
+		- Generell Description of the Stimuli
+		- Scientific intention/use
+		- Description of single/groups of stimulusfiles with reference to path
+		  (e.g., in condition_1/images we used blurred versions of xxx)
+			condition(x3)/sounds()
+	....
+
+metadata in data base:
+	* name/foldername of stimulus set
+	* Responsible Person(s)
+	* Department
+	* Date created   
+	* Date archived
+	* Copyright
+	* Access permissions (e.g. OpenToPublic/InternalUse/FullyRestricted)
+	* Description 
+		- Scientific intention/use
+		- Description of single/groups of stimulus files with reference to path
+		  (e.g., in condition_1/images, we used blurred versions of xxx)
+	* Used in MPIea Projects 
+		- 2015-0123-prj1
+		- 2015-0123-prj2
+		- External Project
+	* Resulting Publications
+		- doi1
+		- doi2
+	* Structure/Path of files/folders  (varies, best stored in json field)
+		condition(x3)/images()
+		condition(x3)/sounds()
+	
+	...
+	
