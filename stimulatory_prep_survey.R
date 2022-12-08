@@ -119,8 +119,10 @@ make_person_page <- function(label = "person_page",  id = 1, prompt = "Please en
                                   selected = "Other", 
                                   width = 200)  
   get_answer <- function(input, state, ...) {
+    browser()
     answer <- input %>% 
       reactiveValuesToList() %>% 
+      discard(is.null) %>% 
       as_tibble() %>% 
       select(all_of(c("last_name","middle_name", "first_name", "orcid", "department")))
     
@@ -193,13 +195,13 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                                 ...) {
   elts <- psychTestR::join(
     intro_page(),
-    psychTestR::get_p_id(prompt = p_id_prompt),
+    # psychTestR::get_p_id(prompt = p_id_prompt),
+    # make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
+    # make_free_text_pages(c("pub_ref", "location")),
+    # make_numeric_input_pages(c("entities")),
     make_dropbox_pages(),
-    make_free_text_pages(c("general_description", "design_spec", "naming_scheme")),
-    make_numeric_input_pages(c("entities")),
     make_checkbox_pages(),
-    make_free_text_pages(c("name", "pub_ref", "location")),
-    personal_page_info(),
+    # personal_page_info(),
     psychTestR::code_block(
       function(state, ...){
         psychTestR::set_local("repeat", TRUE, state)
@@ -211,18 +213,18 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                              make_person_page(label = "owner",
                                               prompt = "Please enter the personal data for the dataset owner")
     ),
-    psychTestR::code_block(
-      function(state, ...){
-        psychTestR::set_local("repeat", TRUE, state)
-        psychTestR::set_local("creator_page_counter", 1, state)
-      }
-    ),
-    psychTestR::while_loop(test = function(state, ...) psychTestR::get_local("repeat", state),
-                           logic =
-                             make_person_page(label = "creator",
-                                              prompt = "Please enter the personal data for the dataset creator")
-    ),
-    make_free_text_pages(c("feedback")),
+    # psychTestR::code_block(
+    #   function(state, ...){
+    #     psychTestR::set_local("repeat", TRUE, state)
+    #     psychTestR::set_local("creator_page_counter", 1, state)
+    #   }
+    # ),
+    # psychTestR::while_loop(test = function(state, ...) psychTestR::get_local("repeat", state),
+    #                        logic =
+    #                          make_person_page(label = "creator",
+    #                                           prompt = "Please enter the personal data for the dataset creator")
+    # ),
+    # make_free_text_pages(c("feedback")),
     
     psychTestR::reactive_page(function(state, ...){
        res <- psychTestR::get_results(state, complete = T, add_session_info = T) %>% as.list()
