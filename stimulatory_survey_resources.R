@@ -179,7 +179,7 @@ dropbox_items <- list(
   ),
   year_created = list(
     prompt = "Please select the year when the first version of the stimulus set was created",
-    items = sprintf("%s", 1995:2022)
+    items = sprintf("%s", c(seq(2022, 1995, -1), "before 1995"))
   )
   
   
