@@ -140,7 +140,7 @@ make_person_page <- function(label = "person_page",
                                   selected = "Other", 
                                   width = 200)  
   get_answer <- function(input, state, ...) {
-    browser()
+    #browser()
     tmp <- input %>% 
       reactiveValuesToList() %>% 
       discard(is.null) 
@@ -156,7 +156,7 @@ make_person_page <- function(label = "person_page",
     answer
   }
   validate <- function(input, state, ...){
-    browser()
+    
     page_counter <- psychTestR::get_local(sprintf("%s_page_counter", label), state)
     if(!is.null(page_counter) && length(page_counter) > 0 && as.integer(page_counter) > 1){
       return(TRUE)
@@ -253,7 +253,7 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                                               prompt = "Please enter the personal data for the dataset creators",
                                               subprompt = "First and last name are mandatory. Click 'Another etnry' for another creator")
     ),
-    
+
     psychTestR::code_block(
       function(state, ...){
         psychTestR::set_local("repeat", TRUE, state)
@@ -269,12 +269,19 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
     make_free_text_pages(c("feedback")),
     psychTestR::reactive_page(function(state, ...){
        res <- psychTestR::get_results(state, complete = T, add_session_info = T) %>% as.list()
-       if(debug) browser()
+       if(debug)browser()
+       psychTestR::one_button_page(body = shiny::div(
+         shiny::h4("Your results"),
+         shiny::pre(
+           jsonlite::prettify(jsonlite::toJSON(res)), 
+           style = general_style))
+         , 
+         button_text = "Continue")
      }),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::final_page(shiny::p(shiny::h4("Thank you for participating!"),
                                     shiny::h4("You can close the browser tab now."),
-                                    shiny::a(href = "http://testing.musikpsychologie.de/MSSS", 
+                                    shiny::a(href = "http://testing.musikpsychologie.de/stimulatory_prep", 
                                              "Or make another entry.", style = "font-size: large")))
   )
   #browser()  
