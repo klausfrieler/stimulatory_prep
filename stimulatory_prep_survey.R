@@ -1,8 +1,10 @@
 library(tidyverse)
 library(psychTestR)
 source("stimulatory_survey_resources.R")
+
 messagef <- function(...) message(sprintf(...))
 printf <- function(...) print(sprintf(...))
+debug <- F
 
 make_likert_pages <- function(items = NULL){
   if(is.null(items)){
@@ -267,7 +269,7 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
     make_free_text_pages(c("feedback")),
     psychTestR::reactive_page(function(state, ...){
        res <- psychTestR::get_results(state, complete = T, add_session_info = T) %>% as.list()
-       browser()
+       if(debug) browser()
      }),
     psychTestR::elt_save_results_to_disk(complete = TRUE),
     psychTestR::final_page(shiny::p(shiny::h4("Thank you for participating!"),

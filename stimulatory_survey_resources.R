@@ -129,7 +129,8 @@ free_text_items <- list(
   version_number = list(
     prompt = "Please enter a version number", 
     subprompt = "This is optional. Assigning of version numbers is under your discretion, though strongly recommended. No specific format is prescribed, however, a simple <MAJOR>.<MINOR> format is recommended.",
-    one_line = T
+    one_line = T,
+    width = "50px"
   ),
   feedback = list(
     prompt = "Would you like to give some feedback on the survey or on the project itself?"
@@ -171,10 +172,10 @@ dropbox_items <- list(
   ),
   size = list(
     prompt = "Please select the approximate size category for the complete stimulus set",
-    items = c("&lt; 10 MB",
-              "10 -- 100 MB",
-              "100 MB -- 1 GB",
-              "greater than 1GB")
+    items = c("less than 10 MB",
+              "10 - 100 MB",
+              "100 MB - 1 GB",
+              "more than 1 GB")
   ),
   year_created = list(
     prompt = "Please select the year when the first version of the stimulus set was created",
@@ -208,7 +209,7 @@ checkbox_items <- list(
     subprompt = "If the stimuli have different levels of copyright, please select all that apply.",
     items = c("Open Access (e.g., CCBY 4.0)",
               "Rights obtained by MPIEA - no time limit",
-              "Rights must be clarified / renewed through MPIEA",
+              "Rights must be cleared / renewed by MPIEA",
               "Author's rights, granted on request",
               "Under external copyright: no reuse possible")
   ),
