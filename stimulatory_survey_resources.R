@@ -1,3 +1,6 @@
+general_style <- "margin-left:20%;margin-right:20%;text-align: justify"
+subprompt_style <- sprintf("font-size:small;%s", general_style)
+
 intro_page <- function(){
   psychTestR::one_button_page(
     body = shiny::div(
@@ -10,7 +13,7 @@ intro_page <- function(){
       shiny::p("Best wishes,", shiny::tags$br(), 
                "Klaus Frieler", shiny::tags$br(), 
                "(on behalf of the SDB-WG)", style = "font-style:italic"),
-      style = "margin-left:20%;margin-right:20%;text-align: justify"
+      style = general_style
       
     ),
     button_text = "Continue"
@@ -30,7 +33,7 @@ personal_page_info <- function(){
                "if applicable, should to be selected. ORCID is optional."),
       shiny::p("Press 'Continue' to move on to the next section, press 'Another entry' to enter, surprise, 
                another person's data."),
-      style = "margin-left:20%;margin-right:20%;text-align: justify"
+      style = general_style
     ),
     button_text = "Continue"
   )
@@ -43,8 +46,9 @@ p_id_prompt <- shiny::div(
   "You can choose the ID freely, but it should be rather unique.",
   "Your can use this ID also to get back to this survey, after an interruption from data entry.", 
   "Once you finished data entry for a stimulus set, you cannot use the same ID again. If you need this really, please contact me."),
-  style = "margin-left:20%;margin-right:20%;text-align: justify"
+  style = subprompt_style
 )
+
 professional_roles <- c(
   "PhD",
   "Post-Doc",
@@ -70,27 +74,37 @@ likert_items <- c()
 
 free_text_items <- list(
   name = list(
-    prompt = "Please give a succinct and descriptive name for your stimulus data set"
+    prompt = "Please enter a name for your stimulus data set",
+    one_line = T
   ),
+  
   pub_ref = list(
-    prompt = "Please enter the DOI for a reference publication, where the stimulus set was (first) used.",
+    prompt = "Please enter the DOI for a reference publication.",
     subprompt = "If you don't have a DOI, please provide bibliographical information (in any style). You can also enter more than one DOI or citation, separated by blank lines."
   ),
+  
   location = list(
     prompt = "Please enter a URL of stimulus", 
-    subprompt = "Only if available. URL needs not  to be publicly available. URL is likely to change later"),
+    subprompt = "Only if available. The URL needs not  to be publicly available, and is likely to change later anyways."),
+  
+  mpiea_project_id = list(
+    prompt = "Please enter Project IDs", 
+    subprompt = "Only if available. Enter all MPIAE Project IDs where the stimulusset (or parts thereof) were used, separated by commas.",
+    one_line = T),
+  
   general_description = list(
     prompt = "Please describe the stimulus data set shortly",
     subprompt = shiny::p("Just the gist, general idea and concept and of the stimuli, areas of application.",
-                         style = "font-size:small;color:darkblue;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
+                         style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
   ),
+  
   design_spec = list(
     prompt = "Please describe the design of the stimulus",
     subprompt = shiny::p("The design of a stimulus set pertains to the logical axes of systematic manipulations or conditions used for constructing the stimulus set.",
                          "For example, a set of texts consisting three different text types (poems, proverbs, Busch epithets),", 
                          "which are modified each to four different versions (original, no rhyme, no meter, no rhyme and no meter),",
-                         " which are avaible in two different media formats (written text and audio)",
-                         style = "font-size:small;color:darkblue;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
+                         " which are avaible in two different media formats (written text and audio).",
+                         style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
   ),
   naming_scheme = list(
     prompt = "Please describe the naming scheme",
@@ -100,11 +114,22 @@ free_text_items <- list(
                          "with an expressive and concise naming scheme instead of hierarchies of nested folders. No two files",
                          "should have the same name (including the file extension) while  being discriminated by their containing folders. If your stimulus set",
                          "does not follow these guidelines yet, we suggest considering to change the file organisiation accordingly before you submit your stimuli.",
-                         style = "font-size:small;color:darkblue;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
+                         style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
   ),
   reference_set = list(
     prompt = "Please enter a reference ID",
-    subprompt = "If your stimulus set is connected to another stimulus set, than you can enter the ID here."
+    subprompt = "If your stimulus set is connected to another stimulus set, please enter the ID here. This allows you split up your stimulus set in cross-referenced subsets.",
+    one_line = T
+  ),
+  keywords = list(
+    prompt = "Please enter a list of keywords that apply to the stimulus set",
+    one_line = T
+    
+  ),
+  version_number = list(
+    prompt = "Please enter a version number", 
+    subprompt = "This is optional. Assigning of version numbers is under your discretion, though strongly recommended. No specific format is prescribed, however, a simple <MAJOR>.<MINOR> format is recommended.",
+    one_line = T
   ),
   feedback = list(
     prompt = "Would you like to give some feedback on the survey or on the project itself?"
@@ -143,28 +168,49 @@ dropbox_items <- list(
   modification = list(
     prompt = "For external material, how many modifications have been made?",
     items = c("None", "Some", "Substantial", "Mixed", "Only internal material" )
+  ),
+  size = list(
+    prompt = "Please select the approximate size category for the complete stimulus set",
+    items = c("&lt; 10 MB",
+              "10 -- 100 MB",
+              "100 MB -- 1 GB",
+              "greater than 1GB")
+  ),
+  year_created = list(
+    prompt = "Please select the year when the first version of the stimulus set was created",
+    items = sprintf("%s", 1995:2022)
   )
-  # ,
-  # role = list(
-  #   prompt= "What is your professional role?", 
-  #   items = c(
-  #     "PhD",
-  #     "Post-Doc",
-  #     "Senior Researcher", 
-  #     "Research Group Leader",
-  #     "Director", 
-  #     "Other"))
+  
+  
 )
 
 checkbox_items <- list(
+  # access_level = list(
+  #   prompt = "Please select all access levels that apply for the different parts of the stimulus set (as of today).",
+  #   subprompt = "",
+  #   items = c("Fully restricted",
+  #             "Internal use (MPIAE)",
+  #             "Restricted (conditional use)",
+  #             "Open access")
+  # ),
   access_level = list(
     prompt = "Please select all access levels that apply for the different parts of the stimulus set (as of today).",
-    subprompt = "",
-    items = c("Fully restricted",
-              "Internal use (MPIAE)",
-              "Restricted (Conditional use)",
-              "Upon request only",
-              "open access")
+    items = c("Project members only", 
+              "Department members only",
+              "Institute members only (incl. affiliated members)",
+              "Available within the Max Planck Society",
+              "Available upon request",
+              "Open Access")
+    
+  ),
+  copyrights = list(
+    prompt = "Please select the applicable copyright or license",
+    subprompt = "If the stimuli have different levels of copyright, please select all that apply.",
+    items = c("Open Access (e.g., CCBY 4.0)",
+              "Rights obtained by MPIEA - no time limit",
+              "Rights must be clarified / renewed through MPIEA",
+              "Author's rights, granted on request",
+              "Under external copyright: no reuse possible")
   ),
   scientific_field = list(
     prompt = "In which scientific fields  was the stimulus set used so far?",
