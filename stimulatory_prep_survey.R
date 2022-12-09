@@ -4,7 +4,7 @@ source("stimulatory_survey_resources.R")
 
 messagef <- function(...) message(sprintf(...))
 printf <- function(...) print(sprintf(...))
-debug <- F
+debug <- T
 
 make_likert_pages <- function(items = NULL){
   if(is.null(items)){
@@ -120,8 +120,8 @@ make_person_page <- function(label = "person_page",
   save_answer <- TRUE
   button_text <- "Continue"
   first_name <- shiny::textInput("first_name", label = "First Name", placeholder = "",  width = width)
-  #middle_name <- shiny::textInput("middle_name", label = "Middle Name", placeholder = "",  width = width)
   last_name <- shiny::textInput("last_name", label = "Last Name", placeholder = "",  width = width)
+  email <- shiny::textInput("email", label = "E-Mail Address", placeholder = "",  width = width)
   orcid_id   <- shiny::textInput("orcid", label = "ORCID", placeholder = "",  width = width)
   department <- shiny::selectInput("department", label = "Department", 
                                    choice = c("Music", 
@@ -146,17 +146,18 @@ make_person_page <- function(label = "person_page",
       discard(is.null) 
     
     page_counter <- psychTestR::get_local(sprintf("%s_page_counter", label), state)
-    answer <- tmp[c("last_name", "first_name", "orcid", "department", "prof_role")] %>% 
+    answer <- tmp[c("last_name", "first_name", "email", "orcid", "department", "prof_role")] %>% 
       as_tibble() %>% 
-      mutate(counter = page_counter, type = label) 
+      mutate(counter = page_counter, type = label) %>% 
+      filter(nzchar(last_name), nzchar(first_name), nzchar(email))
     
     psychTestR::set_local("repeat", identical(input$last_btn_pressed, "repeat"), state)
-    printf("Repeat = %s", identical(input$last_btn_pressed, "repeat"))
+    #printf("Repeat = %s", identical(input$last_btn_pressed, "repeat"))
     #print(answer)
     answer
   }
+  
   validate <- function(input, state, ...){
-    
     page_counter <- psychTestR::get_local(sprintf("%s_page_counter", label), state)
     if(!is.null(page_counter) && length(page_counter) > 0 && as.integer(page_counter) > 1){
       return(TRUE)
@@ -168,11 +169,13 @@ make_person_page <- function(label = "person_page",
       FALSE
     }
   }
+  
   on_complete <- function(state, ...){
     page_counter <- psychTestR::get_local(sprintf("%s_page_counter", label), state)
     psychTestR::set_local(sprintf("%s_page_counter", label), as.integer(page_counter) + 1 , state)
     messagef("Set counter %s to %d", sprintf("%s_page_counter", label), as.integer(page_counter) + 1)
   }
+  
   prompt <- shiny::h4(prompt)
   if(!is.null(subprompt)  && nzchar(subprompt)){
     subprompt <- shiny::p(subprompt, 
@@ -185,6 +188,7 @@ make_person_page <- function(label = "person_page",
                     first_name, 
                     #middle_name, 
                     last_name, 
+                    email,
                     orcid_id, 
                     department, 
                     prof_role)
@@ -235,11 +239,11 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
   elts <- psychTestR::join(
     intro_page(),
     psychTestR::get_p_id(prompt = p_id_prompt, button_text = "Continue"),
-    make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
-    make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
-    make_numeric_input_pages(c("entities")),
-    make_dropbox_pages(),
-    make_checkbox_pages(),
+    # make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
+    # make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
+    # make_numeric_input_pages(c("entities")),
+    # make_dropbox_pages(),
+    # make_checkbox_pages(),
     # personal_page_info(),
     psychTestR::code_block(
       function(state, ...){
@@ -251,7 +255,7 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                            logic =
                              make_person_page(label = "creator",
                                               prompt = "Please enter the personal data for the dataset creators",
-                                              subprompt = "First and last name are mandatory. Click 'Another etnry' for another creator")
+                                              subprompt = "First and last name and e-mail address are mandatory for the first entry. Click 'Another etnry' to add another creator")
     ),
 
     psychTestR::code_block(
@@ -264,7 +268,7 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                            logic =
                              make_person_page(label = "owner",
                                               prompt = "Please enter personal data for the dataset owners",
-                                              subprompt = "The owner is a person currently responsible for maintenance and curation of the stimulus set. (First and last name are mandatory, enter more owners with 'Another entry')")
+                                              subprompt = "The owner is a person currently responsible for maintenance and curation of the stimulus set. (First and last name and e-mail are mandatory for first entry, add more owners with 'Another entry')")
     ),
     make_free_text_pages(c("feedback")),
     psychTestR::reactive_page(function(state, ...){

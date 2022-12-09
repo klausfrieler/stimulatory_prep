@@ -43,8 +43,8 @@ p_id_prompt <- shiny::div(
   shiny::h4("Stimulus Set ID"),
   shiny::p(
   "Please enter an ID for your stimulus set, which may contain only letters, numbers, and underscores.",
-  "You can choose the ID freely, but it should be rather unique.",
-  "Your can use this ID also to get back to this survey, after an interruption from data entry.", 
+  "You can choose the ID freely, but it should be rather unique. This is **not** the name of the stimulus set, for which you will be asked next.",
+  "You can use this ID to interruption your data entry and to get back to the point where you stopped.", 
   "Once you finished data entry for a stimulus set, you cannot use the same ID again. If you need this really, please contact me."),
   style = subprompt_style
 )
@@ -58,13 +58,13 @@ professional_roles <- c(
   "Other")
 
 problems_info = list(
-  de = shiny::tags$span("Probleme? Kontaktieren Sie klaus.frieler@ae.mpg.de mit einem Link zu dieser Seite.", 
+  de = shiny::tags$span("Probleme oder brauchen Sie Hilfe bei der Dateneingabe? Kontaktieren Sie klaus.frieler@ae.mpg.de.", 
                         style = "color:#999999",
   ),
-  de_f = shiny::tags$span("Probleme? Kontaktieren Sie klaus.frieler@ae.mpg.de mit einem Link zu dieser Seite.", 
+  de_f = shiny::tags$span("Probleme oder brauchen Sie Hilfe bei der Dateneingabe? Kontaktieren Sie klaus.frieler@ae.mpg.de.", 
                           style = "color:#999999",  
   ),
-  en = shiny::tags$span("Problems? Contact klaus.frieler@ae.mpg.de with a link to this page.", 
+  en = shiny::tags$span("Problems or need help with data entry? Contact klaus.frieler@ae.mpg.de.", 
                         style = "color:#999999",
                         shiny::tags$br(),
   )
@@ -157,7 +157,7 @@ dropbox_items <- list(
       shiny::tags$li("'Internal' means that the stimuli were self-created"),
       shiny::tags$li("'Mixed' means that the stimulus set contains a mixture of the above"),
       shiny::tags$li("'Other' means a currently unimaginable different way of stimulus creation"),
-      style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:60%"),
+      style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:400px"),
     items = c("External/Commercial", 
               "External/Free",
               "External/Experiment", 
@@ -238,7 +238,7 @@ checkbox_items <- list(
               "Performance", "Other")
   ),
   paradigm = list(
-    prompt = "For which experimental paradigm was the stimulus set mainly designed and/or used for?",
+    prompt = "For which paradigm was the stimulus set mainly designed and/or used for?",
     subprompt = "Multiple answers possible",
     items = c("Oddball", "Comparison", "Reaction time", "Judgement/Rating", "fMRI", "EEG", "Eye-tracking", "MEG", 
               "tDCM", "Physiology", "Other")
