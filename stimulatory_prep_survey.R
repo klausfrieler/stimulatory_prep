@@ -237,9 +237,10 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                                 dict = psyquest::dict,
                                 ...) {
   elts <- psychTestR::join(
+    make_free_text_pages(c("used_works")),
     intro_page(),
     psychTestR::get_p_id(prompt = p_id_prompt, button_text = "Continue"),
-    make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
+    make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme", "used_works")),
     make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
     make_numeric_input_pages(c("entities")),
     make_dropbox_pages(),

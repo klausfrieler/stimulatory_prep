@@ -116,6 +116,11 @@ free_text_items <- list(
                          "does not follow these guidelines yet, we suggest considering to change the file organisiation accordingly before you submit your stimuli.",
                          style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
   ),
+  used_works = list(
+    prompt = "Please list all external works (music, films, books etc.) if these were used in the dataset.",
+    subprompt = shiny::p("Please separated entries here by a line feed/carriage return or a blank line. You can use any metadata format you like, but the works should be uniquely identifiable. For audio recordings, for exampe, this also means including discographical information of the source the audio was taken from.",
+                         style = "font-size:small;text-align:justify;margin-left:20%;margin-right:20%;width:600px")
+  ),
   reference_set = list(
     prompt = "Please enter a reference ID",
     subprompt = "If your stimulus set is connected to another stimulus set, please enter the ID here. This allows you split up your stimulus set in cross-referenced subsets.",
