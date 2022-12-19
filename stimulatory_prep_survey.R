@@ -239,12 +239,12 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
   elts <- psychTestR::join(
     intro_page(),
     psychTestR::get_p_id(prompt = p_id_prompt, button_text = "Continue"),
-    # make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
-    # make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
-    # make_numeric_input_pages(c("entities")),
-    # make_dropbox_pages(),
-    # make_checkbox_pages(),
-    # personal_page_info(),
+    make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme")),
+    make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
+    make_numeric_input_pages(c("entities")),
+    make_dropbox_pages(),
+    make_checkbox_pages(),
+    personal_page_info(),
     psychTestR::code_block(
       function(state, ...){
         psychTestR::set_local("repeat", TRUE, state)
