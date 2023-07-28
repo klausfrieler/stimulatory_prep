@@ -25,12 +25,21 @@ make_likert_pages <- function(items = NULL){
   })  
 }
 
-make_dropbox_pages <- function(items = NULL){
+make_dropbox_pages <- function(items = NULL, exclude = F){
   if(is.null(items)){
     items <- dropbox_items
   }
   else{
-    items <- dropbox_items[items]
+    if(is.numeric(items)){
+      items <- names(dropbox_items)[items]
+    }
+    
+    if(exclude){
+      items <- dropbox_items[setdiff(names(dropbox_items), items)]
+    }
+    else{
+      items <- dropbox_items[items]
+    }
   }
   
   imap(items, function(prompt, i){
@@ -50,12 +59,20 @@ make_dropbox_pages <- function(items = NULL){
   
 }
 
-make_checkbox_pages <- function(items = NULL){
+make_checkbox_pages <- function(items = NULL, exclude = F){
   if(is.null(items)){
     items <- checkbox_items
   }
   else{
-    items <- checkbox_items[items]
+    if(is.numeric(items)){
+      items <- names(checkbox_items)[items]
+    }
+    if(exclude){
+      items <- checkbox_items[setdiff(names(checkbox_items), items)]
+    }
+    else{
+      items <- checkbox_items[items]
+    }
   }
   imap(items, function(prompt, i){
     prompt <- shiny::h4(items[[i]]$prompt)
@@ -75,12 +92,20 @@ make_checkbox_pages <- function(items = NULL){
   
 }
 
-make_free_text_pages <- function(items = NULL){
+make_free_text_pages <- function(items = NULL, exclude = F){
   if(is.null(items)){
     items <- free_text_items
   }
   else{
-    items <- free_text_items[items]
+    if(is.numeric(items)){
+      items <- names(free_text_items)[items]
+    }
+    if(exclude){
+      items <- free_text_items[setdiff(names(free_text_items), items)]
+    }
+    else{
+      items <- free_text_items[items]
+    }
   }
   imap(items, function(prompt, i){
     cur_item <- items[[i]]
@@ -226,7 +251,30 @@ make_numeric_input_pages <- function(items = NULL){
   
 }
 
-
+make_page <- function(labels){
+  map(labels, function(label){
+    #label <- labels[i]
+    ret <- NULL
+    if(label %in% names(free_text_items)){
+      ret <- make_free_text_pages(label)
+    }
+    else if(label %in% names(checkbox_items)){
+      ret <- make_checkbox_pages(label)
+    }
+    else if(label %in% names(dropbox_items)){
+      ret <- make_dropbox_pages(label)
+    }
+    else if(label %in% names(numeric_input_items)){
+      ret <- make_numeric_input_pages(label)
+    }
+    if(is.null(ret)){
+      #print(i)
+      print(label)
+    }
+    ret
+    
+  })
+}
 
 stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                                 documentation = "MSSS",
@@ -237,14 +285,15 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
                                 dict = psyquest::dict,
                                 ...) {
   elts <- psychTestR::join(
-    make_free_text_pages(c("used_works")),
     intro_page(),
     psychTestR::get_p_id(prompt = p_id_prompt, button_text = "Continue"),
     make_free_text_pages(c("name", "general_description", "design_spec", "naming_scheme", "used_works")),
     make_free_text_pages(c("pub_ref", "location", "mpiea_project_id", "keywords", "version_number")),
     make_numeric_input_pages(c("entities")),
     make_dropbox_pages(),
-    make_checkbox_pages(),
+    make_checkbox_pages(1:4),
+    make_free_text_pages(c("licenses")),
+    make_checkbox_pages(1:4, exclude = T),
     personal_page_info(),
     psychTestR::code_block(
       function(state, ...){
@@ -255,7 +304,7 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
     psychTestR::while_loop(test = function(state, ...) psychTestR::get_local("repeat", state),
                            logic =
                              make_person_page(label = "creator",
-                                              prompt = "Please enter the personal data for the dataset creators",
+                                              prompt = "Please enter the personal data of the creators",
                                               subprompt = "First and last name and e-mail address are mandatory for the first entry. Click 'Another etnry' to add another creator")
     ),
 
@@ -268,8 +317,8 @@ stimulatory_survey  <- function(title = "MPIAE Stimulus Sets Survey",
     psychTestR::while_loop(test = function(state, ...) psychTestR::get_local("repeat", state),
                            logic =
                              make_person_page(label = "owner",
-                                              prompt = "Please enter personal data for the dataset owners",
-                                              subprompt = "The owner is a person currently responsible for maintenance and curation of the stimulus set. (First and last name and e-mail are mandatory for first entry, add more owners with 'Another entry')")
+                                              prompt = "Please enter personal data of the owners",
+                                              subprompt = "The owner is a person currently responsible for maintenance and curation of the stimulus set. Need not be a creator. (First and last name and e-mail are mandatory for first entry, add more owners with 'Another entry')")
     ),
     make_free_text_pages(c("feedback")),
     psychTestR::reactive_page(function(state, ...){

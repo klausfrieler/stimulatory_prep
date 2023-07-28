@@ -137,15 +137,21 @@ free_text_items <- list(
     one_line = T,
     width = "50px"
   ),
+  licenses = list(
+    prompt = "Please enter the license(s) for the stimuli.", 
+    subprompt = "This is mainly applicable if the stimulus set (or parts thereof) is under an open source or creative common license. Please enter all licences that apply.",
+    one_line = F,
+    width = "600px"
+  ),
   feedback = list(
     prompt = "Would you like to give some feedback on the survey or on the project itself?"
   )
 )
 
 numeric_input_items <- list(
-  subsets = list(
-    prompt = "How many proper subsets does the stimulus set contain?"
-  ),
+  # subsets = list(
+  #   prompt = "How many proper subsets does the stimulus set contain?"
+  # ),
   entities = list(
     prompt = "How many files does the stimulus set contain?"
   )
@@ -199,6 +205,16 @@ checkbox_items <- list(
   #             "Restricted (conditional use)",
   #             "Open access")
   # ),
+  media_types = list(
+    prompt = "Please select all media types contained in the stimulus set",
+    items = c("Text","Picture", "Video/Live", "Video/Animated", "Audio/Music", "Audio/Speech",
+              "Audio/Sounds", "Audio/Mixed", "VR/AR", "3D-Animation", "Other")
+  ),
+  file_types = list(
+    prompt = "Please select the files types of your stimuli",
+    subprompt = "Multiple answers possible",
+    items = c("pdf","jpeg","tiff","png","wav","mp3","mp4","doc/x","txt", "Other")
+  ),
   access_level = list(
     prompt = "Please select all access levels that apply for the different parts of the stimulus set (as of today).",
     items = c("Project members only", 
@@ -212,9 +228,9 @@ checkbox_items <- list(
   copyrights = list(
     prompt = "Please select the applicable copyright or license",
     subprompt = "If the stimuli have different levels of copyright, please select all that apply.",
-    items = c("Open Access (e.g., CCBY 4.0)",
+    items = c("Open Access (e.g., CC-BY 4.0)",
               "Rights obtained by MPIEA - no time limit",
-              "Rights must be cleared / renewed by MPIEA",
+              "Rights have been obtained temporarily: must be cleared / renewed by MPIEA",
               "Author's rights, granted on request",
               "Under external copyright: no reuse possible")
   ),
@@ -234,6 +250,26 @@ checkbox_items <- list(
               "Brain morphology",
               "Other")
   ),
+  paradigm = list(
+    prompt = "For which paradigm was the stimulus set mainly designed and/or used for?",
+    subprompt = "Multiple answers possible",
+    items = c("Oddball", 
+              "Comparison",  
+              "Judgement/Rating", 
+              "Passive perception",
+              "Sorting",
+              "Associations",
+              "Prompting",
+              "Other")
+  ),
+  measurement = list(
+    prompt = "For which measurement method was the stimulus set mainly designed and/or used for?",
+    subprompt = "Multiple answers possible",
+    items = c("Questionnaire",
+              "Reaction Time",
+              "fMRI", "EEG", "MEG", "Eye-Tracking", 
+              "tDCM", "Physiology", "Other")
+  ),
   art_domain = list(
     prompt = "To which aesthetic or artistic domain does you stimulus set main pertain?",
     subprompt = "Multiple answers possible",
@@ -241,19 +277,7 @@ checkbox_items <- list(
               "Non-fiction Text", "Visual Arts", 
               "Movies", "Music Videos", "Dance", "Theatre", 
               "Performance", "Other")
-  ),
-  paradigm = list(
-    prompt = "For which paradigm was the stimulus set mainly designed and/or used for?",
-    subprompt = "Multiple answers possible",
-    items = c("Oddball", "Comparison", "Reaction time", "Judgement/Rating", "fMRI", "EEG", "Eye-tracking", "MEG", 
-              "tDCM", "Physiology", "Other")
-  ),
-  media_types = list(
-    prompt = "Please select all media types contained in the stimulus set",
-    items = c("Text","Picture", "Video/Live", "Video/Animated", "Audio/Music", "Audio/Speech",
-              "Audio/Sounds", "Audio/Mixed", "VR/AR", "Other")
   )
-  
 )
 
 likert_options <- c("Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree") 
